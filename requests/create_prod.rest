@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/products
+Content-Type: application/json
+
+{
+    "name": "Funko POPY | Game Of Thrones - Daenerys 25",
+    "price": 400,
+    "stock": 2,
+    "sale": true
+}
