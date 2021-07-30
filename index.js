@@ -28,19 +28,64 @@ app.get('/api/products/:id', (request, response)=>{
     
 })
 
-app.delete('./api/products/:id', (request,response) => {
+app.delete('/api/products/:id', (request,response) => {
     const id = Number(request.params.id)
-    products = products.filter(product => product.id !==id)
+    /*products = products.filter(product => product.id !== id)
 
-    response.status(204).end()
+    response.status(204).end()*/
+    prod = products.filter((item, index) => {
+        if(item.id == id){
+            products.splice(index, 1)
+        }
+    })
+
+    response.json(prod)
 })
 
+const generateId = () => {
+    const maxId = products.length > 0
+        ? Math.max(...products.map(p => p.id))
+        : 0
+    return maxId + 1
+}
+
 app.post('/api/products', (request, response) => {
-    const product = request.body
+    const body = request.body
+    
+    if(!body.name){
+        return response.status(400).json({
+            error: 'name missing'
+        })
+    }
+
+    const product = {
+        id: generateId(),
+        image: body.image,
+        name: body.name,
+        price: body.price,
+        stock: body.stock,
+    }
+
+    products = products.concat(product)
 
     response.json(product)
 })
 
+app.put('/api/products/:id', (request, response) => {
+    const id = Number(request.params.id)
+    const body = request.body
+
+    prod = products.filter(item => {
+        if(item.id == id){
+            item.name = body.name,
+            item.image = body.image,
+            item.price = body.price,
+            item.stock = body.stock
+        }
+    })
+
+    response.json(prod)
+})
 let products = [
     {
         "id": 1,
